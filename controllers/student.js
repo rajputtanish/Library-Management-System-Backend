@@ -5,7 +5,7 @@ const studentsList = [
     department: "Computer Science",
     email: "aarav@library.edu",
     phone: "+91 98765 43210",
-    booksBorrowed: 2,
+    booksBorrowed: 0,
     status: "Active",
   },
   {
@@ -23,7 +23,7 @@ const studentsList = [
     department: "Physics",
     email: "rohan@library.edu",
     phone: "+91 76543 21098",
-    booksBorrowed: 4,
+    booksBorrowed: 0,
     status: "Suspended",
   },
   {
@@ -32,7 +32,7 @@ const studentsList = [
     department: "Social Sciences",
     email: "diya@library.edu",
     phone: "+91 65432 10987",
-    booksBorrowed: 1,
+    booksBorrowed: 0,
     status: "Active",
   },
   {
@@ -41,7 +41,7 @@ const studentsList = [
     department: "Computer Science",
     email: "kabir@library.edu",
     phone: "+91 54321 09876",
-    booksBorrowed: 3,
+    booksBorrowed: 0,
     status: "Active",
   },
 ];
