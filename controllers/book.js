@@ -18,7 +18,7 @@ const booksList = [
     title: "The Great Gatsby",
     author: "F. Scott Fitzgerald",
     department: "English Literature",
-    available: false,
+    available: true,
   },
   {
     id: "BK-202A",
@@ -32,14 +32,14 @@ const booksList = [
     title: "1984",
     author: "George Orwell",
     department: "Social Sciences",
-    available: false,
+    available: true,
   },
   {
     id: "BK-303A",
     title: "Brief History of Time",
     author: "Stephen Hawking",
     department: "Physics",
-    available: false,
+    available: true,
   },
 ];
 

@@ -50,4 +50,4 @@ const getAllStudents = (req, res) => {
   res.status(200).json(studentsList);
 };
 
-module.exports = { getAllStudents, studentsList };
+module.exports = { getAllStudents, studentsList};
