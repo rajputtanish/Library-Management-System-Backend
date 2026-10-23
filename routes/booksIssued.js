@@ -2,11 +2,14 @@ const express = require("express");
 const {
   getAllBooksIssued,
   newBookIssued,
-  returnBook,
+  getStudentIssuedBooks,
 } = require("../controllers/bookBorrowed");
+const { returnBook } = require("../controllers/returnBook"); // Import from the new file
 const router = express.Router();
 
 router.get("/", getAllBooksIssued);
+
+router.get("/student/:studentId", getStudentIssuedBooks);
 
 router.post("/", newBookIssued);
 

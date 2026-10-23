@@ -86,5 +86,40 @@ const addBook = (req, res) => {
   });
 };
 
+// Replace your existing removeBook function with this:
+const removeBook = (req, res) => {
+  const { bookIds } = req.body; 
+
+  if (!bookIds || !Array.isArray(bookIds) || bookIds.length === 0) {
+    return res.status(400).json({
+      success: false,
+      message: "Please provide an array of Book IDs.",
+    });
+  }
+
+  const initialLength = booksList.length;
+
+  // Loop backwards to safely remove items from the array without shifting indexes
+  for (let i = booksList.length - 1; i >= 0; i--) {
+    if (bookIds.includes(booksList[i].id)) {
+      booksList.splice(i, 1);
+    }
+  }
+
+  const removedCount = initialLength - booksList.length;
+
+  if (removedCount === 0) {
+    return res.status(404).json({
+      success: false,
+      message: "No books found matching the provided IDs.",
+    });
+  }
+
+  return res.status(200).json({
+    success: true,
+    message: `Successfully removed ${removedCount} book(s)!`,
+  });
+};
+
 // Update your module.exports to include the new addBook function
-module.exports = { getAllBooks, addBook, booksList };
+module.exports = { getAllBooks, addBook, removeBook, booksList };

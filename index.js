@@ -3,7 +3,7 @@ const cors = require("cors");
 const loginRoutes = require("./routes/loginRoutes");
 const bookIssueRoutes = require("./routes/booksIssued");
 const { getAllStudents } = require("./controllers/student");
-const { getAllBooks, addBook } = require("./controllers/book");
+const { getAllBooks, addBook, removeBook } = require("./controllers/book");
 
 const app = express();
 const PORT = process.env.PORT || 4001;
@@ -24,6 +24,8 @@ app.get("/api/students", getAllStudents);
 app.get("/api/books", getAllBooks);
 
 app.post("/api/books", addBook);
+
+app.delete("/api/books", removeBook);
 
 app.use("/api/books-issued", bookIssueRoutes);
 

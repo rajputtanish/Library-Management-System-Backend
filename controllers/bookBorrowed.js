@@ -118,6 +118,39 @@ const getAllBooksIssued = async (req, res) => {
   }
 };
 
+const getStudentIssuedBooks = async (req, res) => {
+  try {
+    const { studentId } = req.params;
+
+    // Find all active issues (not yet returned) for this student
+    const studentIssues = booksIssueList.filter(
+      (item) => item.studentId === studentId && item.returnTime === null
+    );
+
+    // Map the book details into the response
+    const data = studentIssues.map((item) => {
+      const book = booksList.find((b) => b.id === item.bookId);
+      return {
+        ...item,
+        bookTitle: book?.title || "Unknown Title",
+        bookAuthor: book?.author || "Unknown Author",
+        department: book?.department || "Unknown Department",
+      };
+    });
+
+    return res.status(200).json({
+      success: true,
+      data,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch student's books",
+      error: error.message,
+    });
+  }
+};
+
 // Return a book
 const returnBook = async (req, res) => {
   try {
@@ -178,5 +211,5 @@ const returnBook = async (req, res) => {
 module.exports = {
   newBookIssued,
   getAllBooksIssued,
-  returnBook,
+  getStudentIssuedBooks,
 };
