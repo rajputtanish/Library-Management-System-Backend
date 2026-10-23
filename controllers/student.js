@@ -24,7 +24,7 @@ const studentsList = [
     email: "rohan@library.edu",
     phone: "+91 76543 21098",
     booksBorrowed: 0,
-    status: "Suspended",
+    status: "Passout",
   },
   {
     rollNo: "STU-2026-004",
