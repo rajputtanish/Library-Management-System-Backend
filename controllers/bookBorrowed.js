@@ -8,8 +8,6 @@ const newBookIssued = async (req, res) => {
   try {
     const { studentId, bookId } = req.body;
 
-    console.log("Request Body:", req.body);
-
     if (!studentId || !bookId) {
       return res.status(400).json({
         success: false,
@@ -146,63 +144,6 @@ const getStudentIssuedBooks = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Failed to fetch student's books",
-      error: error.message,
-    });
-  }
-};
-
-// Return a book
-const returnBook = async (req, res) => {
-  try {
-    // 1. Get bookId from request body instead of issueId from params
-    const { bookId } = req.body;
-
-    if (!bookId) {
-      return res.status(400).json({
-        success: false,
-        message: "Book ID is required",
-      });
-    }
-
-    // 2. Find the active issue record for this book (where returnTime is null)
-    const issuedBook = booksIssueList.find(
-      (item) => item.bookId === bookId && item.returnTime === null
-    );
-
-    if (!issuedBook) {
-      return res.status(404).json({
-        success: false,
-        message: "No active issue record found for this Book ID. It may already be returned.",
-      });
-    }
-
-    const book = booksList.find((book) => book.id === issuedBook.bookId);
-    const student = studentsList.find(
-      (student) => student.rollNo === issuedBook.studentId
-    );
-
-    // 3. Update issue record
-    issuedBook.returnTime = new Date();
-
-    // 4. Update book availability
-    if (book) {
-      book.available = true;
-    }
-
-    // 5. Update student borrowed count
-    if (student) {
-      student.booksBorrowed = Math.max(0, student.booksBorrowed - 1);
-    }
-
-    return res.status(200).json({
-      success: true,
-      message: "Book returned successfully",
-      data: issuedBook,
-    });
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: "Failed to return book",
       error: error.message,
     });
   }

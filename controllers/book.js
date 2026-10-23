@@ -47,10 +47,6 @@ const getAllBooks = (req, res) => {
   res.status(200).json(booksList);
 };
 
-const getAllBooksCount = (req, res) => {
-  const totalBooks = booksList.length;
-  return res.status(200).json({ totalBooks });
-};
 const addBook = (req, res) => {
   const { title, author, department, quantity } = req.body;
 
@@ -62,21 +58,18 @@ const addBook = (req, res) => {
   }
 
   const newCopies = [];
-  // Generate a base ID for this batch of books
   const baseId = `BK-${Math.floor(1000 + Math.random() * 9000)}`;
 
-  // Create individual copies based on the quantity requested
   for (let i = 0; i < quantity; i++) {
     newCopies.push({
       id: `${baseId}-${String.fromCharCode(65 + i)}`,
       title,
       author,
       department,
-      available: true, // New books are available by default
+      available: true,
     });
   }
 
-  // Push the new copies to the backend array
   booksList.push(...newCopies);
 
   return res.status(201).json({
@@ -86,7 +79,6 @@ const addBook = (req, res) => {
   });
 };
 
-// Replace your existing removeBook function with this:
 const removeBook = (req, res) => {
   const { bookIds } = req.body; 
 
@@ -99,7 +91,6 @@ const removeBook = (req, res) => {
 
   const initialLength = booksList.length;
 
-  // Loop backwards to safely remove items from the array without shifting indexes
   for (let i = booksList.length - 1; i >= 0; i--) {
     if (bookIds.includes(booksList[i].id)) {
       booksList.splice(i, 1);
