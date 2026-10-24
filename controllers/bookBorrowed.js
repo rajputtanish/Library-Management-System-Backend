@@ -122,7 +122,7 @@ const getStudentIssuedBooks = async (req, res) => {
 
     // Find all active issues (not yet returned) for this student
     const studentIssues = booksIssueList.filter(
-      (item) => item.studentId === studentId && item.returnTime === null
+      (item) => item.studentId === studentId
     );
 
     // Map the book details into the response
