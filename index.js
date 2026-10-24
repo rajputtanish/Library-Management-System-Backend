@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const loginRoutes = require("./routes/loginRoutes");
 const bookIssueRoutes = require("./routes/booksIssued");
+const studentAuth = require("./routes/studentAuth"); // <-- Import new route
 const { getAllStudents } = require("./controllers/student");
 const { getAllBooks, addBook, removeBook } = require("./controllers/book");
 
@@ -18,15 +19,12 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/login", loginRoutes);
+app.use("/api/student-auth", studentAuth); // <-- Mount new route
 
 app.get("/api/students", getAllStudents);
-
 app.get("/api/books", getAllBooks);
-
 app.post("/api/books", addBook);
-
 app.delete("/api/books", removeBook);
-
 app.use("/api/books-issued", bookIssueRoutes);
 
 // Start server
