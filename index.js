@@ -6,6 +6,9 @@ const studentAuth = require("./routes/studentAuth"); // <-- Import new route
 const { getAllStudents } = require("./controllers/student");
 const { getAllBooks, addBook, removeBook } = require("./controllers/book");
 
+// 1. Import the scheduler
+const startCronJobs = require("./scheduler");
+
 const app = express();
 const PORT = process.env.PORT || 4001;
 
@@ -26,6 +29,9 @@ app.get("/api/books", getAllBooks);
 app.post("/api/books", addBook);
 app.delete("/api/books", removeBook);
 app.use("/api/books-issued", bookIssueRoutes);
+
+// 2. Start the background email alerts
+startCronJobs();
 
 // Start server
 app.listen(PORT, () => {
