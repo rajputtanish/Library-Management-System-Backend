@@ -11,8 +11,8 @@ const otpStore = {};
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "your-email@gmail.com",
-    pass: "your-app-password", // Use Gmail App Passwords, not your real password
+    user: "rajputtanish2006@gmail.com", // YOUR ACTUAL GMAIL
+    pass: "YOUR_16_LETTER_APP_PASSWORD_HERE", // NO SPACES
   },
 });
 
@@ -29,13 +29,14 @@ router.post("/send-otp", async (req, res) => {
 
   try {
     await transporter.sendMail({
-      from: "your-email@gmail.com",
+      from: "rajputtanish2006@gmail.com", // YOUR ACTUAL GMAIL
       to: student.email,
       subject: "Library Registration OTP",
       text: `Your OTP for library registration is: ${otp}`,
     });
     res.status(200).json({ success: true, message: "OTP sent to registered email." });
   } catch (error) {
+    console.error("Nodemailer error:", error); // <-- Add this to see the exact error in your terminal
     res.status(500).json({ message: "Failed to send email." });
   }
 });
