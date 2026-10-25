@@ -1,48 +1,44 @@
-// routes/studentAuth.js
 const express = require("express");
 const nodemailer = require("nodemailer");
-const { studentsList } = require("../controllers/student");
-const router = express.Router();
+const Student = require("../models/Student");
+require("dotenv").config();
 
-// Temporary in-memory OTP store: { rollNo: { otp, expires } }
+const router = express.Router();
 const otpStore = {};
 
-// Configure email transporter
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "rajputtanish2006@gmail.com", // YOUR ACTUAL GMAIL
-    pass: "YOUR_16_LETTER_APP_PASSWORD_HERE", // NO SPACES
+    user: process.env.GMAIL_USER,
+    pass: process.env.GMAIL_PASS,
   },
 });
 
-// Step 1: Send OTP
 router.post("/send-otp", async (req, res) => {
   const { rollNo } = req.body;
-  const student = studentsList.find((s) => s.rollNo === rollNo);
-
-  if (!student) return res.status(404).json({ message: "Student ID not found in records." });
-  if (student.password) return res.status(400).json({ message: "Student already registered." });
-
-  const otp = Math.floor(100000 + Math.random() * 900000).toString();
-  otpStore[rollNo] = { otp, expires: Date.now() + 10 * 60000 }; // 10 min expiration
-
   try {
+    const student = await Student.findOne({ rollNo: rollNo.trim() });
+    
+    if (!student) return res.status(404).json({ message: "Student ID not found in records." });
+    if (student.password) return res.status(400).json({ message: "Student already registered." });
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    otpStore[rollNo] = { otp, expires: Date.now() + 10 * 60000 }; 
+
     await transporter.sendMail({
-      from: "rajputtanish2006@gmail.com", // YOUR ACTUAL GMAIL
+      from: process.env.GMAIL_USER,
       to: student.email,
       subject: "Library Registration OTP",
       text: `Your OTP for library registration is: ${otp}`,
     });
+    
     res.status(200).json({ success: true, message: "OTP sent to registered email." });
   } catch (error) {
-    console.error("Nodemailer error:", error); // <-- Add this to see the exact error in your terminal
-    res.status(500).json({ message: "Failed to send email." });
+    res.status(500).json({ message: "Failed to process OTP request.", error: error.message });
   }
 });
 
-// Step 2: Verify OTP and Set Password
-router.post("/register", (req, res) => {
+router.post("/register", async (req, res) => {
   const { rollNo, otp, password } = req.body;
   const storedData = otpStore[rollNo];
 
@@ -53,21 +49,25 @@ router.post("/register", (req, res) => {
     return res.status(400).json({ message: "Incorrect OTP." });
   }
 
-  const student = studentsList.find((s) => s.rollNo === rollNo);
-  student.password = password; // In production, hash this with bcrypt
-  delete otpStore[rollNo];
-
-  res.status(200).json({ success: true, message: "Registration complete. You can now login." });
+  try {
+    await Student.findOneAndUpdate({ rollNo }, { password });
+    delete otpStore[rollNo];
+    res.status(200).json({ success: true, message: "Registration complete. You can now login." });
+  } catch (error) {
+    res.status(500).json({ message: "Registration failed.", error: error.message });
+  }
 });
 
-// Step 3: Student Login
-router.post("/login", (req, res) => {
-  const { email, password } = req.body;
-  const student = studentsList.find((s) => s.email === email && s.password === password);
+router.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const student = await Student.findOne({ email, password });
 
-  if (!student) return res.status(401).json({ message: "Invalid email or password." });
-  
-  res.status(200).json({ success: true, student });
+    if (!student) return res.status(401).json({ message: "Invalid email or password." });
+    res.status(200).json({ success: true, student });
+  } catch (error) {
+    res.status(500).json({ message: "Login failed.", error: error.message });
+  }
 });
 
 module.exports = router;

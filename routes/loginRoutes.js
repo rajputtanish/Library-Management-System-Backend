@@ -1,33 +1,20 @@
 const express = require("express");
+const Staff = require("../models/Staff");
 const router = express.Router();
 
-const users = [
-  {
-    id: 1,
-    email: "rajputtanish2006@gmail.com",
-    password: "123456",
-  },
-];
+router.post("/", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await Staff.findOne({ email, password });
 
-const login = (req, res) => {
-  const { email, password } = req.body;
+    if (!user) {
+      return res.status(401).json({ success: false, message: "Invalid email or password" });
+    }
 
-  const user = users.find((u) => u.email === email && u.password === password);
-
-  if (!user) {
-    return res.status(401).json({
-      success: false,
-      message: "Invalid email or password",
-    });
+    res.status(200).json({ success: true, message: "Login successful", user });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
   }
+});
 
-  res.status(200).json({
-    success: true,
-    message: "Login successful",
-    user,
-  });
-};
-
-router.post("/", login);
-
-module.exports = router; 
+module.exports = router;
