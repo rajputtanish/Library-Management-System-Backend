@@ -3,6 +3,7 @@ require("dotenv").config();
 const Book = require("./models/Book");
 const Student = require("./models/Student");
 const Staff = require("./models/Staff");
+const IssueRecord = require("./models/IssueRecord");
 const connectDB = require("./library/connectDB");
 const initialBooks = require("./temp-data/books");
 
@@ -110,6 +111,7 @@ const seedDB = async () => {
     await Book.deleteMany({});
     await Student.deleteMany({});
     await Staff.deleteMany({});
+    await IssueRecord.deleteMany({});
 
     await Book.insertMany(initialBooks);
     await Student.insertMany(initialStudents);

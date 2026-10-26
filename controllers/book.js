@@ -55,6 +55,16 @@ const removeBook = async (req, res) => {
   }
 
   try {
+    // Check if any of the requested books are currently issued out
+    const issuedBooks = await Book.find({ id: { $in: bookIds }, available: false });
+    if (issuedBooks.length > 0) {
+      const issuedIds = issuedBooks.map((b) => b.id).join(", ");
+      return res.status(400).json({
+        success: false,
+        message: `Cannot delete currently issued book(s): ${issuedIds}. Please return them first.`,
+      });
+    }
+
     const result = await Book.deleteMany({ id: { $in: bookIds } });
     if (result.deletedCount === 0) {
       return res.status(404).json({

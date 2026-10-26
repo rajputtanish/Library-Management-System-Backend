@@ -1,11 +1,10 @@
 const express = require("express");
 const cors = require("cors");
-const mongoose = require("mongoose");
+// const mongoose = require("mongoose");
 require("dotenv").config();
 
 const loginRoutes = require("./routes/loginRoutes");
 const bookIssueRoutes = require("./routes/booksIssued");
-const studentAuth = require("./routes/studentAuth");
 const { getAllStudents } = require("./controllers/student");
 const { getAllBooks, addBook, removeBook } = require("./controllers/book");
 const connectDB = require("./library/connectDB");
@@ -24,7 +23,6 @@ app.get("/", (req, res) => {
 
 // API Routes
 app.use("/api/login", loginRoutes);
-app.use("/api/student-auth", studentAuth);
 app.get("/api/students", getAllStudents);
 app.get("/api/books", getAllBooks);
 app.post("/api/books", addBook);
