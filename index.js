@@ -18,6 +18,7 @@ app.use(express.json());
 
 // Home route
 app.get("/", (req, res) => {
+  console.log("dsfijohs")
   res.send("Welcome to Express.js with MongoDB!");
 });
 
