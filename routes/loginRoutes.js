@@ -5,7 +5,7 @@ const router = express.Router();
 router.post("/", async (req, res) => {
   try {
     const { email, password } = req.body;
-    console.log(req);
+    console.log(email, password);
     const user = await Staff.findOne({ email, password });
 
     if (!user) {
@@ -16,6 +16,7 @@ router.post("/", async (req, res) => {
 
     res.status(200).json({ success: true, message: "Login successful", user });
   } catch (error) {
+    console.log(error.message);
     res.status(500).json({ success: false, error: error.message });
   }
 });
