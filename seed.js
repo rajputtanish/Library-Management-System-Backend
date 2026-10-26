@@ -1,9 +1,9 @@
-const mongoose = require("mongoose");
 require("dotenv").config();
 
 const Book = require("./models/Book");
 const Student = require("./models/Student");
 const Staff = require("./models/Staff");
+const connectDB = require("./library/connectDB");
 
 const initialBooks = [
   { id: "BK-101A", title: "The Great Gatsby", author: "F. Scott Fitzgerald", department: "Management", available: true },
@@ -28,8 +28,7 @@ const initialStaff = [
 
 const seedDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI);
-    console.log("Connected to MongoDB...");
+    await connectDB()
 
     await Book.deleteMany({});
     await Student.deleteMany({});
