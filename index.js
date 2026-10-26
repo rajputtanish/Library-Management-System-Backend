@@ -8,6 +8,7 @@ const bookIssueRoutes = require("./routes/booksIssued");
 const studentAuth = require("./routes/studentAuth");
 const { getAllStudents } = require("./controllers/student");
 const { getAllBooks, addBook, removeBook } = require("./controllers/book");
+const connectDB = require("./library/connectDB");
 
 const app = express();
 const PORT = process.env.PORT || 4001;
@@ -30,7 +31,13 @@ app.post("/api/books", addBook);
 app.delete("/api/books", removeBook);
 app.use("/api/books-issued", bookIssueRoutes);
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`🚀 Server running at http://localhost:${PORT}`);
-});
+connectDB()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running at http://localhost:${PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.error("❌ Failed to start server:", error.message);
+    process.exit(1);
+  });

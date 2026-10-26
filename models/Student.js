@@ -6,7 +6,6 @@ const studentSchema = new mongoose.Schema({
   department: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   phone: { type: String, required: true },
-  password: { type: String },
   booksBorrowed: { type: Number, default: 0 },
   status: { type: String, enum: ["Active", "Passout"], default: "Active" }
 });
