@@ -1,12 +1,16 @@
+
 const express = require("express");
 const cors = require("cors");
-// const mongoose = require("mongoose");
 require("dotenv").config();
 
 const loginRoutes = require("./routes/loginRoutes");
 const bookIssueRoutes = require("./routes/booksIssued");
 const { getAllStudents } = require("./controllers/student");
-const { getAllBooks, addBook, removeBook } = require("./controllers/book");
+const {
+  getAllBooks,
+  addBook,
+  removeBook,
+} = require("./controllers/book");
 const connectDB = require("./library/connectDB");
 
 const app = express();
@@ -18,11 +22,10 @@ app.use(express.json());
 
 // Home route
 app.get("/", (req, res) => {
-  console.log("dsfijohs")
-  res.send("Welcome to Express.js with MongoDB!");
+  res.status(200).send("Welcome to Express.js with MongoDB!");
 });
 
-// API Routes
+// API routes
 app.use("/api/login", loginRoutes);
 app.get("/api/students", getAllStudents);
 app.get("/api/books", getAllBooks);
@@ -30,13 +33,32 @@ app.post("/api/books", addBook);
 app.delete("/api/books", removeBook);
 app.use("/api/books-issued", bookIssueRoutes);
 
-connectDB()
-  .then(() => {
-    app.listen(PORT, () => {
-      console.log(`🚀 Server running at http://localhost:${PORT}`);
+// Ensure MongoDB is connected before handling requests
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    console.error("MongoDB connection failed:", error.message);
+    res.status(503).json({
+      message: "Database connection failed",
     });
-  })
-  .catch((error) => {
-    console.error("❌ Failed to start server:", error.message);
-    process.exit(1);
-  });
+  }
+});
+
+// Local development: connect first, then start Express
+if (require.main === module) {
+  connectDB()
+    .then(() => {
+      app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+      });
+    })
+    .catch((error) => {
+      console.error("Failed to connect to MongoDB:", error);
+      process.exit(1);
+    });
+}
+
+// Vercel serverless entry point
+module.exports = app;
