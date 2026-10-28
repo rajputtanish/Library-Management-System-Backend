@@ -7,6 +7,7 @@ async function connectDB() {
   try {
     await mongoose.connect(
       "mongodb+srv://rajputtanish2006_db_user:iJphzl227PR7KayG@cluster0.kwmbunh.mongodb.net",
+      // "mongodb://127.0.0.1:27017",
     );
 
     console.log("✅ MongoDB Atlas connected successfully");

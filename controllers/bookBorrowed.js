@@ -48,6 +48,7 @@ const newBookIssued = async (req, res) => {
 
 const getAllBooksIssued = async (req, res) => {
   try {
+    console.log("passed auth")
     const issues = await IssueRecord.find({}).sort({ borrowTime: -1 }).lean();
     
     const data = await Promise.all(issues.map(async (item) => {
