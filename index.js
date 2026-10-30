@@ -24,13 +24,22 @@ app.get("/", (req, res) => {
 
 // Ensure MongoDB is connected before handling requests
 app.use(async (req, res, next) => {
+  console.log("REQUEST RECEIVED:", req.method, req.url);
+
   try {
+    console.log("DB CONNECTION STARTING");
+
     await connectDB();
+
+    console.log("DB CONNECTION SUCCESSFUL");
+
     next();
   } catch (error) {
-    console.error("MongoDB connection failed:", error.message);
+    console.error("DB CONNECTION FAILED:", error.message);
+
     res.status(503).json({
-      message: "Database connection failed",
+      success: false,
+      error: error.message,
     });
   }
 });
