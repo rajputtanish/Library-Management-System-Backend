@@ -1,7 +1,7 @@
-const dns = require("node:dns");
+// const dns = require("node:dns");
 const mongoose = require("mongoose");
 
-dns.setServers(["8.8.8.8", "1.1.1.1"]);
+// dns.setServers(["8.8.8.8", "1.1.1.1"]);
 
 async function connectDB() {
   try {
