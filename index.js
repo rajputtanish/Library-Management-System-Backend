@@ -1,4 +1,3 @@
-
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
@@ -6,11 +5,7 @@ require("dotenv").config();
 const loginRoutes = require("./routes/loginRoutes");
 const bookIssueRoutes = require("./routes/booksIssued");
 const { getAllStudents } = require("./controllers/student");
-const {
-  getAllBooks,
-  addBook,
-  removeBook,
-} = require("./controllers/book");
+const { getAllBooks, addBook, removeBook } = require("./controllers/book");
 const connectDB = require("./library/connectDB");
 
 const app = express();
@@ -22,16 +17,10 @@ app.use(express.json());
 
 // Home route
 app.get("/", (req, res) => {
-  res.status(200).send("Welcome to Express.js with MongoDB! nnnnnnnnnnnnnnnnnnnnnnnnnnnnn");
+  res
+    .status(200)
+    .send("Welcome to Express.js with MongoDB! nnnnnnnnnnnnnnnnnnnnnnnnnnnnn");
 });
-
-// API routes
-app.use("/api/login", loginRoutes);
-app.get("/api/students", getAllStudents);
-app.get("/api/books", getAllBooks);
-app.post("/api/books", addBook);
-app.delete("/api/books", removeBook);
-app.use("/api/books-issued", bookIssueRoutes);
 
 // Ensure MongoDB is connected before handling requests
 app.use(async (req, res, next) => {
@@ -45,6 +34,14 @@ app.use(async (req, res, next) => {
     });
   }
 });
+
+// API routes
+app.use("/api/login", loginRoutes);
+app.get("/api/students", getAllStudents);
+app.get("/api/books", getAllBooks);
+app.post("/api/books", addBook);
+app.delete("/api/books", removeBook);
+app.use("/api/books-issued", bookIssueRoutes);
 
 // Local development: connect first, then start Express
 if (require.main === module) {
